@@ -39,5 +39,7 @@ app.get("/etiquetas.html", auth, (req, res) => {
 app.get("/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/login.html"));
 });
-
+app.get("/", (req, res) => {
+  res.redirect("/login.html");
+});
 app.listen(3000, () => console.log("Rodando em http://localhost:3000"));
