@@ -17,6 +17,13 @@ app.use(session({
 
 /* ====== SERVIR ARQUIVOS ESTÁTICOS ====== */
 app.use(express.static(__dirname));
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/login.html");
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/login.html");
+});
 
 /* ====== ROTAS ====== */
 
