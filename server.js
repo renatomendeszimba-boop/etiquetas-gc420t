@@ -14,16 +14,30 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(express.static(path.join(__dirname, "public")));
+// ROTAS DE PÁGINA
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "login.html"));
+});
 
-function auth(req, res, next) {
-  if (!req.session.user) return res.redirect("/login.html");
-  next();
-}
+app.get("/login.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "login.html"));
+});
 
+app.get("/etiquetas.html", (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/login.html");
+  }
+  res.sendFile(path.join(__dirname, "public", "etiquetas.html"));
+});
+
+// LOGIN
 app.post("/login", (req, res) => {
   const { usuario, senha } = req.body;
-  const ok = usuarios.find(u => u.usuario === usuario && u.senha === senha);
+
+  const ok = usuarios.find(
+    u => u.usuario === usuario && u.senha === senha
+  );
+
   if (ok) {
     req.session.user = usuario;
     res.redirect("/etiquetas.html");
@@ -32,14 +46,13 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.get("/etiquetas.html", auth, (req, res) => {
-  res.sendFile(path.join(__dirname, "public/etiquetas.html"));
+// LOGOUT
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login.html");
+  });
 });
 
-app.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/login.html"));
+app.listen(3000, () => {
+  console.log("Rodando em http://localhost:3000");
 });
-app.get("/", (req, res) => {
-  res.redirect("/login.html");
-});
-app.listen(3000, () => console.log("Rodando em http://localhost:3000"));
