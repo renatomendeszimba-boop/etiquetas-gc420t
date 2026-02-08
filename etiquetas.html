@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Etiquetas</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h2>Impressão de Etiquetas</h2><a href="/logout">Sair</a></header>
+<input type="file" id="excel" accept=".xlsx">
+<button onclick="carregar()">Carregar Excel</button>
+<button onclick="window.print()">Imprimir Lote</button>
+<div id="area"></div>
+<script>
+function carregar() {
+  const file = document.getElementById("excel").files[0];
+  if (!file) return alert("Selecione a planilha");
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = new Uint8Array(e.target.result);
+    const wb = XLSX.read(data, {type:"array"});
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet);
+    const area = document.getElementById("area");
+    area.innerHTML = "";
+    rows.forEach(r => {
+      if (r.IMPRESSO && r.IMPRESSO.toUpperCase()==="SIM") return;
+      const d = document.createElement("div");
+      d.className = "etiqueta";
+      d.innerHTML = `
+        <div>
+          <div><b>NOME:</b> ${r.NOME||""}</div>
+          <div><b>CPF:</b> ${r.CPF||""}</div>
+          <div>${r.PLACA||""} <b>PRODUTO:</b> ${r.PRODUTO||""}</div>
+          <div><b>EMPRESA:</b> ${r.EMPRESA||""}</div>
+          <div><b>DATA:</b> ${r.DATA||""}</div>
+        </div>
+        <div class="rodape">Ar A</div>`;
+      area.appendChild(d);
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+</script>
+</body>
+</html>

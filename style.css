@@ -1,0 +1,12 @@
+body{font-family:Arial;padding:20px;background:#f2f2f2}
+header{display:flex;justify-content:space-between}
+.login-box{width:300px;margin:100px auto;background:#fff;padding:20px}
+input,button{width:100%;padding:10px;margin-top:10px}
+.etiqueta{width:100mm;height:50mm;padding:6mm;border:1px solid #000;
+page-break-after:always;display:flex;flex-direction:column;justify-content:space-between}
+.rodape{text-align:center;font-weight:bold}
+@media print{
+body{background:none;padding:0}
+header,input,button{display:none}
+.etiqueta{border:none;margin:0}
+}
